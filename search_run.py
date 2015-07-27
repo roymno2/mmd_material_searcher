@@ -27,6 +27,14 @@ def walk_in_dir(root_path):
                                 print "\n".join(run_result["motion"])+"\n"
                         else:
                             print "unzip error "+root+os.path.sep+name
+                            
+                    if ext_name.lower() in [".pmd",".mpo",".pmx",".x"]:
+                        print root+os.path.sep+name+" find model"
+                        print ""
+                    if ext_name.lower() in [".vmd"]:
+                        print root+os.path.sep+name+" find motion"
+                        print ""
+                        
                 
             
 
@@ -91,3 +99,5 @@ def windows_cmd_sep_copy(org_path):
 
 if len(sys.argv)==2:
     walk_in_dir(sys.argv[1])
+else:
+    print "Usage:search_run.py {dir path}"

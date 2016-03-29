@@ -1,45 +1,52 @@
-# -*-coding:gbk-*-
+#! -*-coding=gbk-*-
 import os
 import subprocess
 import sys
 import commands
+import time
 
-default_path_7z_cmd='c:\\Program Files\\7-Zip\\7z.exe'
 
 def walk_in_dir(root_path):
-    
-    for root, dirs, files in os.walk(root_path, True):
-        for name in files:
-            if len(name)>0:
-                if name[0]!="$":
-                    front_name,ext_name=os.path.splitext(name)
-                    if ext_name.lower() in [".rar",".7z",".zip"]:
-                        zipfilepath=root+os.path.sep+name
-                        cmd = '"'+default_path_7z_cmd+'" l "'+ windows_cmd_sep_copy(zipfilepath)+'"'
-                 
-                        run_result=run_in_subprocesspopen(cmd)
-                        if run_result is not None:
-                            if run_result["model"]!=[]:
-                                print root+os.path.sep+name+" find model"
-                                print "\n".join(run_result["model"])+"\n"
-                            if run_result["motion"]!=[]:
-                                print root+os.path.sep+name+" find motion"
-                                print "\n".join(run_result["motion"])+"\n"
-                        else:
-                            print "unzip error "+root+os.path.sep+name
-                            
-                    if ext_name.lower() in [".pmd",".mpo",".pmx",".x"]:
-                        print root+os.path.sep+name+" find model"
-                        print ""
-                    if ext_name.lower() in [".vmd"]:
-                        print root+os.path.sep+name+" find motion"
-                        print ""
+    assd=""
+    try:
+        for root, dirs, files in os.walk(root_path, True):
+            for name in files:
+                if len(name)>0:
+                    if name[0]!="$":
+                        front_name,ext_name=os.path.splitext(name)
+                        if ext_name.lower() in [".rar",".7z",".zip"]:
+                            zipfilepath=root+os.path.sep+name
+                            cmd = '"'+'./7za.exe'+'" l "'+ windows_cmd_sep_copy(zipfilepath)+'"'
+                            # assd=cmd.decode("gbk")
+                            #print assd
+                            #print type(assd)
+                            #time.sleep(1)
+                            run_result=run_in_subprocesspopen(cmd)
+                            if run_result is not None:
+                                if run_result["model"]!=[]:
+                                    print root+os.path.sep+name+" find model"
+                                    print "\n".join(run_result["model"])+"\n"
+                                if run_result["motion"]!=[]:
+                                    print root+os.path.sep+name+" find motion"
+                                    print "\n".join(run_result["motion"])+"\n"
+                            else:
+                                print "unzip error "+root+os.path.sep+name
+                                
+                        if ext_name.lower() in [".pmd",".mpo",".pmx",".x"]:
+                            print root+os.path.sep+name+" find model"
+                            print ""
+                        if ext_name.lower() in [".vmd"]:
+                            print root+os.path.sep+name+" find motion"
+                            print ""
+    except Exception,e:
+        print str(e)
+        print assd
                         
                 
             
 
 def which_platform():
-    # 判定是 windows 还是 linux
+   
     import platform
     pythonVersion = platform.python_version()
     uname = platform.uname()
@@ -93,11 +100,12 @@ def run_in_subprocesspopen(cmd):
                 
 def windows_cmd_sep_copy(org_path):
     path=org_path.replace('\\','\\\\')
-    return path
+    return path.encode("gbk")
        
         
 
 if len(sys.argv)==2:
-    walk_in_dir(sys.argv[1])
+    #walk_in_dir(u"e:\\")
+    walk_in_dir(sys.argv[1].decode("gbk"))
 else:
     print "Usage:search_run.py {dir path}"
